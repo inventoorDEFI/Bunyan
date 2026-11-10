@@ -4,7 +4,7 @@ The official target is **bunyan.capital**. GoDaddy remains the domain registrar.
 
 ## Recommended: import the GitHub repository
 
-1. In your Netlify account choose **Add new project → Import an existing project → GitHub** and select `inventoorDEFI/Bunyan` (after the redesign is pushed there).
+1. In your Netlify account choose **Add new project → Import an existing project → GitHub** and select `inventoorDEFI/Bunyan`. The redesign is pushed to `main`.
 2. Use the branch containing this redesign. Netlify reads `netlify.toml`: build command `npm run build`, publish directory `dist`, functions directory `netlify/functions`, Node 22.
 3. Deploy and verify the Netlify URL before changing DNS. Submit a test investor request and confirm a `BN-…` record exists in Netlify's **Blobs** store `bunyan-leads`, under `requests/`. Requests do not send email notifications automatically; assign an operator to review and export new requests daily. The existing three-business-day response copy is preserved.
 4. In Netlify **Domain management**, add `bunyan.capital` and `www.bunyan.capital`; make `bunyan.capital` primary. Use the precise DNS targets Netlify shows for this project.
