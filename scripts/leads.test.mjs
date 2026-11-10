@@ -1,0 +1,13 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {handleLead,validate} from '../server/leads.mjs';
+const input={type:'investor',lang:'ar',consent:true,data:{name:'اختبار بنيان',email:'test@example.com',ticket:'500-10k',interest:['fractional'],city:['riyadh']}};
+const req=(body=input,headers={})=>new Request('https://bunyan.capital/api/leads',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://bunyan.capital',...headers},body:JSON.stringify(body)});
+test('persists Arabic and consent before acknowledging receipt',async()=>{let saved;const response=await handleLead(req(),{save:async r=>{saved=r;}});assert.equal(response.status,201);assert.match((await response.json()).id,/^BN-[A-F0-9]{12}$/);assert.equal(saved.data.name,'اختبار بنيان');assert.equal(saved.consent.pdpl,true);});
+test('storage failure never reports success',async()=>{assert.equal((await handleLead(req(),{save:async()=>{throw Error('offline');}})).status,503);});
+test('rejects cross-origin submissions',async()=>{assert.equal((await handleLead(req(input,{Origin:'https://other.example'}))).status,403);});
+test('validates consent, email, required fields, enum values and array types',()=>{for(const patch of [{consent:false},{type:'__proto__'},{data:{...input.data,email:'wrong'}},{data:{...input.data,ticket:'anything'}},{data:{...input.data,interest:'fractional'}},{data:{...input.data,interest:[]}},{data:{...input.data,city:['invalid']}},{data:{...input.data,name:''}},{data:{...input.data,mobile:{value:'test'}}}]) assert.equal(validate({...input,...patch}),null);});
+test('stores only defined fields',()=>{assert.equal(validate({...input,data:{...input.data,nationalId:'private'}}).data.nationalId,undefined);});
+test('rejects oversized payload, malformed JSON, and wrong content type',async()=>{assert.equal((await handleLead(req({...input,padding:'a'.repeat(17000)}))).status,413);assert.equal((await handleLead(new Request('https://bunyan.capital/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:'{'}))).status,400);assert.equal((await handleLead(req(input,{'Content-Type':'text/plain'}))).status,415);});
+test('rejects bots and rate limit without storing leads',async()=>{assert.equal((await handleLead(req({...input,website:'spam'}))).status,422);assert.equal((await handleLead(req(),{allow:async()=>false})).status,429);});
+test('accepts institutional and broker applications',()=>{assert.ok(validate({type:'institution',consent:true,data:{org:'Company',licence:'123',name:'Test',title:'Director',email:'test@example.com',mobile:'0500000000'}}));assert.ok(validate({type:'broker',consent:true,data:{name:'Test',fal:'123',email:'test@example.com',mobile:'0500000000',city:'Riyadh'}}));});

@@ -1,0 +1,20 @@
+{
+  "name": "bunyan-capital",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "netlify dev",
+    "test": "node --test scripts/leads.test.mjs",
+    "test:browser": "python3 scripts/smoke.py"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "netlify-cli": "27.17.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "dependencies": {
+    "@netlify/blobs": "11.1.9"
+  }
+}

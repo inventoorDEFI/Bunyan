@@ -1,0 +1,27 @@
+:root{
+--font-sans:'Sora',system-ui,sans-serif;
+--font-mono:'DM Mono','Noto Kufi Arabic',ui-monospace,monospace;
+--font-arabic:'Noto Kufi Arabic','Sora',system-ui,sans-serif;
+--font-display:var(--font-sans);
+--fw-light:300; /* @kind font */
+--fw-regular:400; /* @kind font */
+--fw-medium:500; /* @kind font */
+--fw-semibold:600; /* @kind font */
+--fw-bold:700; /* @kind font */
+
+/* size / line-height pairs */
+--fs-display:44px;--lh-display:52px;
+--fs-h1:32px;--lh-h1:40px;
+--fs-h2:24px;--lh-h2:32px;
+--fs-h3:19px;--lh-h3:26px;
+--fs-body-lg:17px;--lh-body-lg:28px;
+--fs-body:15px;--lh-body:24px;
+--fs-small:13px;--lh-small:20px;
+--fs-label:11px;--lh-label:16px;--ls-label:.08em;
+--fs-mono:12px;--lh-mono:18px;
+--ls-tight:-.02em; /* @kind font */
+/* Arabic runs ~1.12x line-height for Kufi ascenders */
+--lh-arabic-scale:1.15; /* @kind font */
+}
+html[dir="rtl"],[lang="ar"]{--font-sans:'Noto Kufi Arabic','Sora',system-ui,sans-serif;--font-display:'Noto Kufi Arabic','Sora',system-ui,sans-serif;--ls-tight:0; /* @kind font */
+--ls-label:0; /* @kind font */}

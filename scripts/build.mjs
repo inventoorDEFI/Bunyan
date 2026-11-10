@@ -1,0 +1,11 @@
+import {build} from 'esbuild';
+import {readFile,writeFile,mkdir,cp,rm} from 'node:fs/promises';
+const files=['core.jsx','shell.jsx','pages-home.jsx','pages-build.jsx','pages-other.jsx','app.jsx','flows.jsx','ws-data.jsx','ws-dev.jsx','ws-cmi.jsx','dashboards.jsx'];
+const source=await readFile('Bunyan Site.html','utf8');
+const site=source.match(/<script type="text\/babel">([\s\S]*?)<\/script>/)[1];
+await rm('dist',{recursive:true,force:true}); await mkdir('dist/assets',{recursive:true});
+for(const dir of ['assets','fonts','tokens']) await cp(dir,`dist/${dir}`,{recursive:true});
+for(const file of ['site.css','redesign.css','.htaccess','robots.txt']) await cp(file,`dist/${file}`);
+await build({stdin:{contents:`import React from 'react'; import * as ReactDOM from 'react-dom/client';\n${await readFile('icons-data.js','utf8')}\nwindow.BUNYAN_LOGO={dark:'assets/logo/bunyan-lockup-black-trim.png',white:'assets/logo/bunyan-lockup-white.svg'};\nwindow.BUNYAN_IMG=Object.fromEntries(['najd-horizon','khobar-marina','asir-heights','diriyah-courtyard','coral-gate'].map(k=>[k,'assets/projects/'+k+'.webp']));\n${(await Promise.all(files.map(f=>readFile(f,'utf8')))).join('\n')}\n${site}`,resolveDir:process.cwd(),loader:'jsx'},bundle:true,minify:true,sourcemap:false,outfile:'dist/assets/site.js',define:{'process.env.NODE_ENV':'"production"'},target:['es2020']});
+await writeFile('dist/index.html',`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173e35"><meta name="description" content="بنيان منصة سعودية تجمع المطورين العقاريين والمؤسسات المالية المرخصة والمستثمرين في مكان واحد."><meta property="og:title" content="Bunyan · بنيان"><meta property="og:type" content="website"><meta property="og:image" content="https://bunyan.capital/assets/projects/diriyah-courtyard.webp"><title>Bunyan · بنيان</title><link rel="icon" href="assets/logo/bunyan-mark.svg"><link rel="preload" href="fonts/noto-kufi-arabic-400-700-arabic.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="site.css"><link rel="stylesheet" href="redesign.css"></head><body><div id="root"></div><script defer src="assets/site.js"></script></body></html>`);
+console.log('Built dist/ — production React, local assets and fonts; no runtime CDN or Babel.');

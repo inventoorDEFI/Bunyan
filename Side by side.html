@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bunyan · Arabic and English</title>
+<link rel="stylesheet" href="site.css">
+<style>
+body{height:100vh;display:flex;flex-direction:column;background:var(--surface-sunken)}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:var(--white-warm);border-bottom:1px solid var(--line)}
+.bar select{height:36px;border:1px solid var(--line-strong);border-radius:var(--radius-md);padding-inline:8px;font:inherit;background:var(--white-warm)}
+.panes{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px;min-height:0}
+.pane{display:flex;flex-direction:column;gap:6px;min-height:0}
+.pane iframe{flex:1;width:100%;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface-page)}
+.w-mobile .pane{align-items:center}.w-mobile iframe{max-width:390px}
+</style>
+</head>
+<body>
+<div class="bar">
+<span class="label">Page</span>
+<select id="route"><option value="">Home</option><option value="projects">Projects</option><option value="build">Bunyan Build</option><option value="institutions">For institutions</option><option value="brokers">For brokers</option><option value="about">About</option><option value="privacy">Privacy</option><option value="app/projects/najd-horizon">App · Project</option><option value="app/sign-in/investor">App · Sign in</option><option value="app/portfolio">App · Investor portfolio</option><option value="app/invest/khobar-marina">App · Subscribe flow</option><option value="app/home/inspector">App · Inspector</option><option value="app/home/shariah">App · Shariah advisor</option><option value="app/home/admin">App · Admin</option><option value="build/app/developer">Build · Developer</option><option value="build/app/partner">Build · Capital partner</option></select>
+<span class="label" style="margin-inline-start:12px">Width</span>
+<select id="width"><option value="mobile">Mobile 390</option><option value="full">Full</option></select>
+</div>
+<div class="panes w-mobile" id="panes">
+<div class="pane"><span class="label">/ar</span><iframe id="ar" title="Arabic"></iframe></div>
+<div class="pane"><span class="label">/en</span><iframe id="en" title="English"></iframe></div>
+</div>
+<script>
+const SRC=new URLSearchParams(location.search).get('src')||'Bunyan Site.html';const r=document.getElementById('route'),w=document.getElementById('width'),p=document.getElementById('panes');
+const saved=JSON.parse(localStorage.getItem('bunyan.sbs')||'{}');if(saved.r!=null)r.value=saved.r;if(saved.w)w.value=saved.w;
+function go(){const v=r.value;document.getElementById('ar').src=SRC+'#/ar'+(v?'/'+v:'');document.getElementById('en').src=SRC+'#/en'+(v?'/'+v:'');p.className='panes w-'+w.value;localStorage.setItem('bunyan.sbs',JSON.stringify({r:v,w:w.value}))}
+r.onchange=go;w.onchange=()=>{p.className='panes w-'+w.value;localStorage.setItem('bunyan.sbs',JSON.stringify({r:r.value,w:w.value}))};go();
+</script>
+</body>
+</html>

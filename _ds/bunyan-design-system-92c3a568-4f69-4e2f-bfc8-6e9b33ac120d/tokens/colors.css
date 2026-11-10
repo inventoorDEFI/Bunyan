@@ -1,0 +1,30 @@
+/* Bunyan colour tokens. Base values from the MVP brand spec; derived values marked. */
+:root{
+/* Brand base (MVP spec) */
+--teal-600:#066D67;--teal-700:#075550;--teal-50:#E8F1EE;
+--sand-500:#B99045;--sand-50:#F5EDDD;
+--ink-900:#101C24;--ink-700:#25343C;--slate-500:#6E7B83;
+--paper:#F7F6F1;--white-warm:#FCFBF8;
+/* Logo bronze (from supplied logo files) */
+--bronze-700:#5A4423;
+/* Derived — not in MVP spec */
+--teal-100:#D3E5E0;--teal-800:#05403C;
+--sand-100:#EDDFC2;--sand-700:#8A6A2E;
+--slate-300:#A9B2B7;--slate-200:#D5D9D9;
+--line:#E4E2D9;--line-strong:#CFCCC1;
+--brick-600:#A23E2F;--brick-50:#F6E7E2;
+
+/* Semantic aliases */
+--brand-primary:var(--teal-600);--brand-primary-hover:var(--teal-700);--brand-primary-press:var(--teal-800);
+--brand-accent:var(--sand-500);--brand-mark:var(--bronze-700);
+--surface-page:var(--paper);--surface-card:var(--white-warm);--surface-sunken:#EFEDE5;
+--surface-tint:var(--teal-50);--surface-sand:var(--sand-50);--surface-inverse:var(--ink-900);
+--text-primary:var(--ink-900);--text-secondary:var(--ink-700);--text-muted:var(--slate-500);
+--text-on-brand:var(--white-warm);--text-link:var(--teal-600);--text-accent:var(--sand-700);
+--border-default:var(--line);--border-strong:var(--line-strong);--border-focus:var(--teal-600);
+--status-success:var(--teal-600);--status-success-bg:var(--teal-50);
+--status-pending:var(--sand-700);--status-pending-bg:var(--sand-50);
+--status-danger:var(--brick-600);--status-danger-bg:var(--brick-50);
+--status-neutral:var(--ink-700);--status-neutral-bg:var(--surface-sunken);
+--focus-ring:0 0 0 3px rgba(6,109,103,.22);
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bunyan · بنيان</title>
+<link rel="icon" href="assets/logo/bunyan-mark.svg">
+<link rel="stylesheet" href="site.css">
+<style>
+.track{display:grid;gap:16px;grid-template-columns:1fr}
+.track-col{display:flex;flex-direction:column;gap:12px}
+.track-floors{display:flex;flex-direction:column-reverse;gap:3px}
+.pedestal{display:none}@media(min-width:900px){.pedestal{display:block}}.track-head{display:flex;flex-direction:column;gap:2px;padding-bottom:8px;border-bottom:2px solid var(--sand-500)}
+@media(min-width:900px){.track{grid-template-columns:repeat(4,minmax(0,1fr));align-items:end}.pedestal{height:calc(var(--step) * 56px);background:repeating-linear-gradient(to top,var(--surface-sunken) 0 13px,var(--surface-page) 13px 16px)}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="logo-data.js"></script>
+<script src="images-data.js"></script>
+<script src="icons-data.js"></script>
+<script type="text/babel" src="core.jsx"></script>
+<script type="text/babel" src="shell.jsx"></script>
+<script type="text/babel" src="pages-home.jsx"></script>
+<script type="text/babel" src="pages-build.jsx"></script>
+<script type="text/babel" src="pages-other.jsx"></script>
+<script type="text/babel" src="app.jsx"></script>
+<script type="text/babel" src="flows.jsx"></script>
+<script type="text/babel" src="ws-data.jsx"></script>
+<script type="text/babel" src="ws-dev.jsx"></script>
+<script type="text/babel" src="ws-cmi.jsx"></script>
+<script type="text/babel" src="dashboards.jsx"></script>
+<script type="text/babel">
+function Site() {
+  const { lang, path } = useRoute();
+  const [signIn, setSignIn] = React.useState(false);
+  const [lead, setLead] = React.useState(null);
+  const [doc, setDoc] = React.useState(null);
+  React.useEffect(() => { document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'; }, [lang]);
+  const [a, b, c] = path;
+  let page, app = false;
+  if (a === 'app' || (a === 'build' && (b === 'sign-in' || b === 'app'))) {
+    app = true;
+    if (b === 'sign-in') page = <SignIn product={a} roleKey={c} />;
+    else if (b === 'portfolio') page = <Portfolio />;
+    else if (b === 'projects') page = <AppProject id={c} />;
+    else if (b === 'invest') page = <Invest id={c} />;
+    else page = <RoleHome product={a} roleKey={c} />;
+  } else {
+    page = a === 'apply' ? <ApplicationPage type={b} /> : ({ projects: <Projects />, build: <Build />, institutions: <Institutions />, brokers: <Brokers />, about: <About />, privacy: <Privacy /> })[a] || <Home />;
+  }
+  return <LangCtx.Provider value={lang}>
+    <SignInCtx.Provider value={() => setSignIn(true)}>
+      <LeadCtx.Provider value={(k) => setLead(k)}><DocCtx.Provider value={setDoc}>
+        <div key={lang + path.join('/')} data-screen-label={(a || 'home') + (b ? '/' + b : '')}>
+          {app ? page : <><Header path={path} />{page}<Footer /></>}
+        </div>
+        {signIn && <RolePicker onClose={() => setSignIn(false)} />}
+        {lead && <LeadSheet type={lead} onClose={() => setLead(null)} />}
+        {doc && <DocViewer doc={doc} onClose={() => setDoc(null)} />}
+      </DocCtx.Provider></LeadCtx.Provider>
+    </SignInCtx.Provider>
+  </LangCtx.Provider>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Site />);
+</script>
+<template id="__bundler_thumbnail" data-bg-color="#066D67"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#066D67"/><path d="M30 70V44h8v-6h8v-6h8v6h8v6h8v26z" fill="#F7F6F1"/></svg></template>
+</body>
+</html>
